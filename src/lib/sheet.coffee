@@ -66,7 +66,10 @@ exports.texturePackerJson = (blocks, sheetWidth, sheetHeight, filename, root, cb
 
     fname = block.filename
     if root && fname.indexOf(root) is 0
-      fname = fname.slice(root.length + 1)
+      if root[root.length - 1] is '/'
+        fname = fname.slice(root.length)
+      else
+        fname = fname.slice(root.length + 1)
 
     result.frames[fname] =
       frame: {x: block.fit.x, y: block.fit.y, w, h}

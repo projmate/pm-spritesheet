@@ -52,7 +52,11 @@ exports.texturePackerJson = function(blocks, sheetWidth, sheetHeight, filename, 
     h = block.h;
     fname = block.filename;
     if (root && fname.indexOf(root) === 0) {
-      fname = fname.slice(root.length + 1);
+      if (root[root.length - 1] === '/') {
+        fname = fname.slice(root.length);
+      } else {
+        fname = fname.slice(root.length + 1);
+      }
     }
     result.frames[fname] = {
       frame: {
