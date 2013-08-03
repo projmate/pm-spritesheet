@@ -120,6 +120,17 @@ module.exports = (Projmate) ->
           Sheet.texturePackerJson blocks, width, height, Path.basename(options.filename), options.root, (err, obj) ->
             return cb(err) if err
 
-            Fs.writeFile PmUtils.changeExtname(options.filename, '.json'), JSON.stringify(obj, null, '  '), cb
+            json = JSON.stringify(obj, null, '  ')
+            Fs.writeFile PmUtils.changeExtname(options.filename, '.json'), json, (err) ->
+              return cb(err) if err
+
+              # reduce all assets to a single asset
+              task.assets.clear()
+              task.assets.create
+                filename: options.filename
+                text: json
+              cb null
+
 
       Async.series [readAssetImageMeta, pack], cb
+

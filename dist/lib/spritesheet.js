@@ -140,10 +140,22 @@ module.exports = function(Projmate) {
             return cb(err);
           }
           return Sheet.texturePackerJson(blocks, width, height, Path.basename(options.filename), options.root, function(err, obj) {
+            var json;
             if (err) {
               return cb(err);
             }
-            return Fs.writeFile(PmUtils.changeExtname(options.filename, '.json'), JSON.stringify(obj, null, '  '), cb);
+            json = JSON.stringify(obj, null, '  ');
+            return Fs.writeFile(PmUtils.changeExtname(options.filename, '.json'), json, function(err) {
+              if (err) {
+                return cb(err);
+              }
+              task.assets.clear();
+              task.assets.create({
+                filename: options.filename,
+                text: json
+              });
+              return cb(null);
+            });
           });
         });
       };
